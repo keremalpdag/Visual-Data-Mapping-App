@@ -17,10 +17,12 @@ import javax.xml.parsers.ParserConfigurationException;
 public class XmlFile {
     private String fileName;
     private List<XmlElement> elements;
+    private File file;
 
     public XmlFile(File file) {
         this.fileName = file.getName();
         this.elements = new ArrayList<>();
+        this.file = file;
         this.parseFile(file);
     }
 
@@ -157,7 +159,9 @@ public class XmlFile {
     }
 
     public void saveToFile() throws IOException {
-        FileWriter writer = new FileWriter(fileName);
+        int extIndex = fileName.lastIndexOf(".");
+        String mappedFileName = fileName.substring(0, extIndex) + "_mapped" + fileName.substring(extIndex);
+        FileWriter writer = new FileWriter(file.getAbsolutePath().substring(0,file.getAbsolutePath().lastIndexOf(File.separator)) + File.separator + mappedFileName);
         writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         writer.write("<" + elements.get(0).getName() + ">\n");
 

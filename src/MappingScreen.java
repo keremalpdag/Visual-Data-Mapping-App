@@ -48,6 +48,7 @@ public class MappingScreen extends JPanel {
                 if (selectedElement != null) {
                     for (MappingElement mappingElement : rightMappingElements) {
                         if (mappingElement.withinBounds(e.getX(), e.getY())) {
+                            updateElementValue(selectedElement, mappingElement);
                             addMapping(selectedElement, mappingElement);
                             break;
                         }
@@ -177,6 +178,11 @@ public class MappingScreen extends JPanel {
                     selectedElement.getY() + selectedElement.getHeight() / 2,
                     mousePoint.x, mousePoint.y);
         }
+    }
+
+    private void updateElementValue(MappingElement leftElement, MappingElement rightElement){
+        rightElement.getXmlElement().setValue(leftElement.getXmlElement().getValue());
+        rightElement.getXmlElement().setAttributes(leftElement.getXmlElement().getAttributes());
     }
 
     private void addMapping(MappingElement leftElement, MappingElement rightElement) {
