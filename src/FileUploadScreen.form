@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="FileUploadScreen">
+  <grid id="27dc6" binding="panel1" layout-manager="GridLayoutManager" row-count="4" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="558" height="466"/>
+    </constraints>
+    <properties>
+      <background color="-16624641"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <component id="63439" class="javax.swing.JLabel" binding="file2Label">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="Arial" size="16" style="0"/>
+          <foreground color="-393224"/>
+          <text value="File 2: No File Selected"/>
+          <toolTipText value="Selected file will be shown here"/>
+        </properties>
+      </component>
+      <component id="258d5" class="javax.swing.JLabel" binding="file1Label">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="Arial" size="16" style="0"/>
+          <foreground color="-393224"/>
+          <text value="File 1: No File Selected"/>
+          <toolTipText value="Selected file will be shown here"/>
+        </properties>
+      </component>
+      <component id="a5994" class="javax.swing.JButton" binding="file2Button">
+        <constraints>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font swing-font="Button.font"/>
+          <text value="Select File 2"/>
+          <toolTipText value="Click to select file"/>
+        </properties>
+      </component>
+      <component id="48a0b" class="javax.swing.JButton" binding="file1Button">
+        <constraints>
+          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <focusPainted value="false"/>
+          <font swing-font="Button.font"/>
+          <hideActionText value="false"/>
+          <selected value="false"/>
+          <text value="Select File 1"/>
+          <toolTipText value="Click to select file"/>
+        </properties>
+      </component>
+      <component id="f9c1f" class="javax.swing.JButton" binding="startButton">
+        <constraints>
+          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <focusable value="false"/>
+          <font swing-font="Button.font"/>
+          <text value="Start Mapping"/>
+          <toolTipText value="Click to start mapping"/>
+        </properties>
+      </component>
+      <hspacer id="6ef3e">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </hspacer>
+      <component id="7e8fd" class="javax.swing.JLabel" binding="title">
+        <constraints>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-393224"/>
+          <font name="Arial" size="28" style="1"/>
+          <foreground color="-393224"/>
+          <text value="Upload XML Files"/>
+        </properties>
+      </component>
+      <component id="c149" class="javax.swing.JButton" binding="previewFileButton1">
+        <constraints>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Preview File"/>
+          <toolTipText value="Click to preview file"/>
+        </properties>
+      </component>
+      <component id="cf9fa" class="javax.swing.JButton" binding="previewFileButton2">
+        <constraints>
+          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Preview File"/>
+          <toolTipText value="Click to preview file"/>
+        </properties>
+      </component>
+      <hspacer id="3abdf">
+        <constraints>
+          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </hspacer>
+      <component id="f626a" class="javax.swing.JButton" binding="aboutButton" default-binding="true">
+        <constraints>
+          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="About"/>
+          <toolTipText value="More about the project"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>
