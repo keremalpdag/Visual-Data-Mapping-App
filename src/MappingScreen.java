@@ -191,7 +191,7 @@ public class MappingScreen extends JPanel {
         rightY = generateMappingElements(rightXmlFile.getElements(), rightMappingElements, rightX, rightY, 0);
 
         int contentHeight = Math.max(leftY, rightY) + 10;
-        Dimension preferredSize = new Dimension(800, contentHeight);
+        Dimension preferredSize = new Dimension(800, contentHeight-200);
         setPreferredSize(preferredSize);
 
         JFrame frame = new JFrame("Mapping Screen");
