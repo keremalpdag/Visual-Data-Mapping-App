@@ -7,6 +7,7 @@ public class MappingElement {
     private int width;
     private int height;
     private XmlElement xmlElement;
+    private Color color;
 
     public MappingElement(XmlElement xmlElement, int x, int y, int width, int height) {
         this.xmlElement = xmlElement;
@@ -14,10 +15,11 @@ public class MappingElement {
         this.y = y;
         this.width = width;
         this.height = height;
+        color = Color.BLUE;
     }
 
     public void draw(Graphics g) {
-        g.setColor(Color.BLUE);
+        g.setColor(color);
         g.fillRect(x, y, width, height);
         g.setColor(Color.WHITE);
         g.drawString(xmlElement.getName(), x + 10, y + 20);
@@ -61,6 +63,10 @@ public class MappingElement {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public boolean withinBounds(int x, int y) {

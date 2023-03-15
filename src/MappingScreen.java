@@ -28,6 +28,7 @@ public class MappingScreen extends JPanel {
         this.selectedElement = null;
         this.mousePoint = new Point();
         this.mapping = new HashMap<>();
+
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -57,6 +58,29 @@ public class MappingScreen extends JPanel {
                     selectedElement = null;
                     mousePoint = new Point();
                 }
+            }
+        });
+
+        this.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                for (MappingElement mappingElement : leftMappingElements) {
+                    if (mappingElement.withinBounds(e.getX(), e.getY())) {
+                        mappingElement.setColor(new Color(72, 168, 197));
+                    } else {
+                        mappingElement.setColor(Color.BLUE);
+                    }
+                }
+
+                for (MappingElement mappingElement : rightMappingElements) {
+                    if (mappingElement.withinBounds(e.getX(), e.getY())) {
+                        mappingElement.setColor(new Color(72, 168, 197));
+                    } else {
+                        mappingElement.setColor(Color.BLUE);
+                    }
+                }
+
+                repaint();
             }
         });
     }
@@ -143,7 +167,49 @@ public class MappingScreen extends JPanel {
         saveButton.setFocusable(false);
         saveButton.setBorderPainted(false);
 
+        JButton previewFileButton = new JButton("Preview File");
+        previewFileButton.addActionListener(e -> {
+            PreviewFile previewFile = new PreviewFile(rightXmlFile, 2);
+            previewFile.showPreview();
+        });
+        previewFileButton.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                JButton button = (JButton) e.getSource();
+                button.setBackground(UIManager.getColor("control"));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                JButton button = (JButton) e.getSource();
+                button.setBackground(Color.LIGHT_GRAY);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                JButton button = (JButton) e.getSource();
+                button.setBackground(UIManager.getColor("control"));
+            }
+        });
+        previewFileButton.setBackground(Color.white);
+        previewFileButton.setForeground(new Color(2, 83, 255));
+        previewFileButton.setFont(new Font("Arial", Font.BOLD, 16));
+        previewFileButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        previewFileButton.setFocusable(false);
+        previewFileButton.setBorderPainted(false);
+
         JPanel buttonPanel = new JPanel();
+        buttonPanel.add(previewFileButton);
         buttonPanel.add(saveButton);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
