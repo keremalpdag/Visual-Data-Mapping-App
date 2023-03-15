@@ -1,7 +1,5 @@
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,9 +79,92 @@ public class MappingScreen extends JPanel {
                 }
 
                 repaint();
+
+                autoScroll(e);
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                autoScroll(e);
             }
         });
     }
+
+    private void autoScroll(MouseEvent e) {
+        JScrollPane scrollPane = findScrollPane(MappingScreen.this);
+        if (scrollPane != null) {
+            JViewport viewport = scrollPane.getViewport();
+            Point viewPosition = viewport.getViewPosition();
+            Dimension extentSize = viewport.getExtentSize();
+
+            int scrollMargin = 25; // Distance from the edge of the viewport that triggers scrolling
+            int scrollSpeed = 10; // Number of pixels to scroll
+
+            // Check if the mouse is near the edges and adjust the view position accordingly
+            if (e.getX() - viewPosition.x < scrollMargin) {
+                viewPosition.x = Math.max(0, viewPosition.x - scrollSpeed);
+            } else if (viewPosition.x + extentSize.width - e.getX() < scrollMargin) {
+                viewPosition.x = Math.min(getWidth() - extentSize.width, viewPosition.x + scrollSpeed);
+            }
+            if (e.getY() - viewPosition.y < scrollMargin) {
+                viewPosition.y = Math.max(0, viewPosition.y - scrollSpeed);
+            } else if (viewPosition.y + extentSize.height - e.getY() < scrollMargin) {
+                viewPosition.y = Math.min(getHeight() - extentSize.height, viewPosition.y + scrollSpeed);
+            }
+
+            // Update the view position
+            viewport.setViewPosition(viewPosition);
+        }
+    }
+
+    private JScrollPane findScrollPane(Component component) {
+        if (component.getParent() == null) {
+            return null;
+        } else if (component.getParent() instanceof JScrollPane) {
+            return (JScrollPane) component.getParent();
+        } else {
+            return findScrollPane(component.getParent());
+        }
+    }
+
+
+    private int generateMappingElements(List<XmlElement> xmlElements, List<MappingElement> mappingElements, int x, int y, int indentLevel) {
+        int elementWidth = 200 - indentLevel * 20;
+        for (XmlElement element : xmlElements) {
+            MappingElement mappingElement = new MappingElement(element, x + indentLevel * 20, y, elementWidth, 30, this.getWidth());
+            mappingElements.add(mappingElement);
+            y += 35;
+            if (element.getChildren() != null) {
+                y = generateMappingElements(element.getChildren(), mappingElements, x, y, indentLevel + 1);
+            }
+        }
+        return y;
+    }
+
+    private void updateMappingElementPositions(List<MappingElement> mappingElements, int newX) {
+        for (MappingElement mappingElement : mappingElements) {
+            int originalX = mappingElement.getX();
+            int offsetX = newX - originalX;
+            mappingElement.setX(newX);
+            if (mapping.containsKey(mappingElement)) {
+                MappingElement rightElement = mapping.get(mappingElement);
+                MappingLine mappingLine = getMappingLine(mappingElement, rightElement);
+                if (mappingLine != null) {
+                    mappingLine.setStartX(mappingLine.getStartX() + offsetX);
+                }
+            }
+        }
+    }
+
+    private MappingLine getMappingLine(MappingElement leftElement, MappingElement rightElement) {
+        for (MappingLine mappingLine : mappingLines) {
+            if (mappingLine.getSource().equals(leftElement) && mappingLine.getDestination().equals(rightElement)) {
+                return mappingLine;
+            }
+        }
+        return null;
+    }
+
 
     public void init() {
         int leftX = 10;
@@ -91,36 +172,28 @@ public class MappingScreen extends JPanel {
         int rightX = 500;
         int rightY = 10;
 
-        for (XmlElement element : leftXmlFile.getElements()) {
-            MappingElement mappingElement = new MappingElement(element, leftX, leftY, 200, 30);
-            leftMappingElements.add(mappingElement);
-            if(element.getChildren() != null){
-                for (int i = 0; i < element.getChildren().size(); i++) {
-                    leftY += 35;
-                    MappingElement mappingElementChild = new MappingElement(element.getChildren().get(i), leftX, leftY, 150, 30);
-                    leftMappingElements.add(mappingElementChild);
-                }
-            }
-            leftY += 40;
-        }
+        leftY = generateMappingElements(leftXmlFile.getElements(), leftMappingElements, leftX, leftY, 0);
+        rightY = generateMappingElements(rightXmlFile.getElements(), rightMappingElements, rightX, rightY, 0);
 
-        for (XmlElement element : rightXmlFile.getElements()) {
-            MappingElement mappingElement = new MappingElement(element, rightX, rightY, 200, 30);
-            rightMappingElements.add(mappingElement);
-            if(element.getChildren() != null){
-                for(int i = 0; i < element.getChildren().size(); i++){
-                    rightY += 35;
-                    MappingElement mappingElementChild = new MappingElement(element.getChildren().get(i), rightX, rightY, 150, 30);
-                    rightMappingElements.add(mappingElementChild);
-                }
-            }
-            rightY += 40;
-        }
-
-        setPreferredSize(new Dimension(800, Math.max(leftY, rightY) + 10));
+        int contentHeight = Math.max(leftY, rightY) + 10;
+        Dimension preferredSize = new Dimension(800, contentHeight);
+        setPreferredSize(preferredSize);
 
         JFrame frame = new JFrame("Mapping Screen");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int frameWidth = frame.getContentPane().getWidth();
+                int leftX = 10;
+                int rightX = frameWidth - 210;
+                updateMappingElementPositions(leftMappingElements, leftX);
+                updateMappingElementPositions(rightMappingElements, rightX);
+                repaint();
+            }
+        });
+
 
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener(e -> {
@@ -212,12 +285,17 @@ public class MappingScreen extends JPanel {
         buttonPanel.add(previewFileButton);
         buttonPanel.add(saveButton);
 
+        JScrollPane scrollPane = new JScrollPane(this, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.add(this, BorderLayout.CENTER);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         frame.getContentPane().add(mainPanel);
-        frame.pack();
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setMinimumSize(preferredSize); // Set the minimum size to the preferred size
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }

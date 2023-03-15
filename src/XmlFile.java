@@ -32,61 +32,37 @@ public class XmlFile {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(file);
             Element rootElement = document.getDocumentElement();
-            NodeList nodeList = rootElement.getChildNodes();
-
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
-
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) node;
-                    XmlElement xmlElement = new XmlElement(
-                            element.getNodeName(),
-                            element.getTextContent(),
-                            element.getAttribute("type")
-                    );
-
-                    NodeList attributeNodeList = element.getChildNodes();
-                    for (int j = 0; j < attributeNodeList.getLength(); j++) {
-                        Node attributeNode = attributeNodeList.item(j);
-                        if (attributeNode.getNodeType() == Node.ATTRIBUTE_NODE) {
-                            Element attributeElement = (Element) attributeNode;
-                            XmlAttribute attribute = new XmlAttribute(attributeElement.getNodeName(), attributeElement.getTextContent());
-                            xmlElement.addAttribute(attribute);
-                        }
-                    }
-
-                    this.elements.add(xmlElement);
-
-                    NodeList childNodeList = element.getChildNodes();
-                    for (int j = 0; j < childNodeList.getLength(); j++) {
-                        Node childNode = childNodeList.item(j);
-                        if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                            Element childElement = (Element) childNode;
-                            XmlElement childXmlElement = new XmlElement(
-                                    childElement.getNodeName(),
-                                    childElement.getTextContent(),
-                                    childElement.getAttribute("type")
-                            );
-
-                            NodeList childAttributeNodeList = childElement.getChildNodes();
-                            for (int k = 0; k < childAttributeNodeList.getLength(); k++) {
-                                Node childAttributeNode = childAttributeNodeList.item(k);
-                                if (childAttributeNode.getNodeType() == Node.ATTRIBUTE_NODE) {
-                                    Element childAttributeElement = (Element) childAttributeNode;
-                                    XmlAttribute childAttribute = new XmlAttribute(childAttributeElement.getNodeName(), childAttributeElement.getTextContent());
-                                    childXmlElement.addAttribute(childAttribute);
-                                }
-                            }
-
-                            xmlElement.addChild(childXmlElement);
-                        }
-                    }
-                }
-            }
+            processElement(rootElement, null);
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
     }
+
+    private void processElement(Element element, XmlElement parent) {
+        XmlElement xmlElement = new XmlElement(element.getNodeName(), element.getTextContent(), element.getAttribute("type"));
+
+        if (element.hasAttributes()) {
+            for (int i = 0; i < element.getAttributes().getLength(); i++) {
+                Node attributeNode = element.getAttributes().item(i);
+                xmlElement.addAttribute(new XmlAttribute(attributeNode.getNodeName(), attributeNode.getNodeValue()));
+            }
+        }
+
+        NodeList childNodeList = element.getChildNodes();
+        for (int j = 0; j < childNodeList.getLength(); j++) {
+            Node childNode = childNodeList.item(j);
+            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                processElement((Element) childNode, xmlElement);
+            }
+        }
+
+        if (parent == null) {
+            elements.add(xmlElement);
+        } else {
+            parent.addChild(xmlElement);
+        }
+    }
+
 
     public String previewFile() {
         StringBuilder sb = new StringBuilder();

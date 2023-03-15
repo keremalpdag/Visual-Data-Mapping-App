@@ -8,13 +8,15 @@ public class MappingElement {
     private int height;
     private XmlElement xmlElement;
     private Color color;
+    private int panelWidth;
 
-    public MappingElement(XmlElement xmlElement, int x, int y, int width, int height) {
+    public MappingElement(XmlElement xmlElement, int x, int y, int width, int height, int panelWidth) {
         this.xmlElement = xmlElement;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.panelWidth = panelWidth;
         color = Color.BLUE;
     }
 
@@ -71,5 +73,13 @@ public class MappingElement {
 
     public boolean withinBounds(int x, int y) {
         return (this.x <= x && x <= this.x + width && this.y <= y && y <= this.y + height);
+    }
+
+    public boolean isLeftElement() {
+        return getX() < panelWidth / 2;
+    }
+
+    public boolean isRightElement() {
+        return getX() >= panelWidth / 2;
     }
 }

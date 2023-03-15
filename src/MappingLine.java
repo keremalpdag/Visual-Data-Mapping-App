@@ -31,4 +31,13 @@ public class MappingLine {
     public void setDestination(MappingElement destination) {
         this.destination = destination;
     }
+
+    public int getStartX() {
+        return source.getX() + source.getWidth();
+    }
+
+    public void setStartX(int startX) {
+        int offsetX = startX - getStartX();
+        source.setX(source.getX() + offsetX);
+    }
 }
