@@ -1,5 +1,7 @@
-import java.awt.Color;
-import java.awt.Graphics;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class MappingElement {
     private int x;
@@ -10,6 +12,8 @@ public class MappingElement {
     private Color color;
     private int panelWidth;
     private boolean collapsed;
+    private boolean isMapped;
+    private Image notMappedIcon;
 
     public MappingElement(XmlElement xmlElement, int x, int y, int width, int height, int panelWidth) {
         this.xmlElement = xmlElement;
@@ -20,6 +24,13 @@ public class MappingElement {
         this.panelWidth = panelWidth;
         this.color = Color.BLUE;
         this.collapsed = false;
+        this.isMapped = false;
+
+        try {
+            notMappedIcon = ImageIO.read(new File("warning_icon.png")).getScaledInstance(18, 18, Image.SCALE_SMOOTH);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void draw(Graphics g) {
@@ -28,15 +39,21 @@ public class MappingElement {
         g.setColor(Color.WHITE);
         g.drawString(xmlElement.getName(), x + 10, y + 20);
 
-        // Collapse/expand icon
         if (xmlElement.getChildren() != null && !xmlElement.getChildren().isEmpty()) {
             g.drawRect(x + width - 20, y, 10, 10);
-            g.drawLine(x + width - 18, y + 5, x + width - 8, y + 5);
+            g.drawLine(x + width - 18, y + 5, x + width - 12, y + 5);
             if (collapsed) {
-                g.drawLine(x + width - 13, y + 2, x + width - 13, y + 8);
+                g.drawLine(x + width - 15, y + 2, x + width - 15, y + 8);
             }
         }
 
+        if(!isMapped){
+            int imageX = x + width + 5;
+            int imageY = y + 2;
+            int imageWidth = notMappedIcon.getWidth(null);
+            int imageHeight = notMappedIcon.getHeight(null);
+            g.drawImage(notMappedIcon, imageX, imageY, imageWidth, imageHeight, null);
+        }
     }
 
     public XmlElement getXmlElement() {
@@ -113,5 +130,13 @@ public class MappingElement {
         int iconSize = 10;
         return mouseX >= iconX && mouseX <= iconX + iconSize
                 && mouseY >= iconY && mouseY <= iconY + iconSize;
+    }
+
+    public boolean isMapped() {
+        return isMapped;
+    }
+
+    public void setMapped(boolean isMapped) {
+        this.isMapped = isMapped;
     }
 }

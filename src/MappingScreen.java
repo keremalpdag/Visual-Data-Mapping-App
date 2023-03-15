@@ -190,8 +190,8 @@ public class MappingScreen extends JPanel {
         leftY = generateMappingElements(leftXmlFile.getElements(), leftMappingElements, leftX, leftY, 0);
         rightY = generateMappingElements(rightXmlFile.getElements(), rightMappingElements, rightX, rightY, 0);
 
-        int contentHeight = Math.max(leftY, rightY) + 10;
-        Dimension preferredSize = new Dimension(800, contentHeight-200);
+        int contentHeight = Math.max(leftY, rightY) + 20;
+        Dimension preferredSize = new Dimension(800, contentHeight);
         setPreferredSize(preferredSize);
 
         JFrame frame = new JFrame("Mapping Screen");
@@ -310,7 +310,7 @@ public class MappingScreen extends JPanel {
 
         frame.getContentPane().add(mainPanel);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setMinimumSize(preferredSize); // Set the minimum size to the preferred size
+        frame.setMinimumSize(new Dimension(800,600));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
@@ -370,6 +370,8 @@ public class MappingScreen extends JPanel {
         mapping.put(leftElement, rightElement);
         MappingLine mappingLine = new MappingLine(leftElement, rightElement);
         mappingLines.add(mappingLine);
+        leftElement.setMapped(true);
+        rightElement.setMapped(true);
         repaint();
     }
     public Map<MappingElement, MappingElement> getMapping() {
