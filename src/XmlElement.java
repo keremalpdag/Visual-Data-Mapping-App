@@ -7,6 +7,7 @@ public class XmlElement {
     private String type;
     private List<XmlAttribute> attributes;
     private List<XmlElement> children;
+    private XmlElement parent;
 
     public XmlElement(String name, String value, String type) {
         this.name = name;
@@ -75,11 +76,21 @@ public class XmlElement {
         return children;
     }
 
-    public void setChildren(List<XmlElement> children) {
-        this.children = children;
+    public XmlElement getParent() {
+        return parent;
+    }
+
+    public void setParent(XmlElement parent) {
+        this.parent = parent;
     }
 
     public void addChild(XmlElement child) {
         this.children.add(child);
+        child.setParent(this); // Set the parent of the child element
     }
+
+    public void setChildren(List<XmlElement> children) {
+        this.children = children;
+    }
+
 }

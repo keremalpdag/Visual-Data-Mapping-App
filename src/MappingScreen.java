@@ -31,9 +31,24 @@ public class MappingScreen extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 for (MappingElement mappingElement : leftMappingElements) {
+                    if (mappingElement.isToggleIconClicked(e.getX(), e.getY())) {
+                        mappingElement.toggleCollapsed();
+                        repaint();
+                        return;
+                    }
                     if (mappingElement.withinBounds(e.getX(), e.getY())) {
                         selectedElement = mappingElement;
                         break;
+                    }
+                }
+
+                if (selectedElement == null) {
+                    for (MappingElement mappingElement : rightMappingElements) {
+                        if (mappingElement.isToggleIconClicked(e.getX(), e.getY())) {
+                            mappingElement.toggleCollapsed();
+                            repaint();
+                            return;
+                        }
                     }
                 }
 
@@ -304,24 +319,46 @@ public class MappingScreen extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        for (MappingElement mappingElement : leftMappingElements) {
-            mappingElement.draw(g);
-        }
-
-        for (MappingElement mappingElement : rightMappingElements) {
-            mappingElement.draw(g);
-        }
+        drawMappingElements(g, leftMappingElements);
+        drawMappingElements(g, rightMappingElements);
 
         for (MappingLine mappingLine : mappingLines) {
             mappingLine.draw(g);
         }
-
         if (selectedElement != null) {
             g.setColor(Color.RED);
             g.drawLine(selectedElement.getX() + selectedElement.getWidth(),
                     selectedElement.getY() + selectedElement.getHeight() / 2,
                     mousePoint.x, mousePoint.y);
         }
+    }
+
+    private void drawMappingElements(Graphics g, List<MappingElement> mappingElements) {
+        for (MappingElement mappingElement : mappingElements) {
+            XmlElement parent = mappingElement.getXmlElement().getParent();
+            boolean parentCollapsed = false;
+            while (parent != null) {
+                MappingElement parentMappingElement = findMappingElementByXmlElement(mappingElements, parent);
+                if (parentMappingElement != null && parentMappingElement.isCollapsed()) {
+                    parentCollapsed = true;
+                    break;
+                }
+                parent = parent.getParent();
+            }
+
+            if (!parentCollapsed) {
+                mappingElement.draw(g);
+            }
+        }
+    }
+
+    private MappingElement findMappingElementByXmlElement(List<MappingElement> mappingElements, XmlElement xmlElement) {
+        for (MappingElement mappingElement : mappingElements) {
+            if (mappingElement.getXmlElement() == xmlElement) {
+                return mappingElement;
+            }
+        }
+        return null;
     }
 
     private void updateElementValue(MappingElement leftElement, MappingElement rightElement){

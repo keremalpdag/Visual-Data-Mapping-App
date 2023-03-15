@@ -9,6 +9,7 @@ public class MappingElement {
     private XmlElement xmlElement;
     private Color color;
     private int panelWidth;
+    private boolean collapsed;
 
     public MappingElement(XmlElement xmlElement, int x, int y, int width, int height, int panelWidth) {
         this.xmlElement = xmlElement;
@@ -17,7 +18,8 @@ public class MappingElement {
         this.width = width;
         this.height = height;
         this.panelWidth = panelWidth;
-        color = Color.BLUE;
+        this.color = Color.BLUE;
+        this.collapsed = false;
     }
 
     public void draw(Graphics g) {
@@ -25,6 +27,16 @@ public class MappingElement {
         g.fillRect(x, y, width, height);
         g.setColor(Color.WHITE);
         g.drawString(xmlElement.getName(), x + 10, y + 20);
+
+        // Collapse/expand icon
+        if (xmlElement.getChildren() != null && !xmlElement.getChildren().isEmpty()) {
+            g.drawRect(x + width - 20, y, 10, 10);
+            g.drawLine(x + width - 18, y + 5, x + width - 8, y + 5);
+            if (collapsed) {
+                g.drawLine(x + width - 13, y + 2, x + width - 13, y + 8);
+            }
+        }
+
     }
 
     public XmlElement getXmlElement() {
@@ -81,5 +93,25 @@ public class MappingElement {
 
     public boolean isRightElement() {
         return getX() >= panelWidth / 2;
+    }
+
+    public boolean isCollapsed() {
+        return collapsed;
+    }
+
+    public void setCollapsed(boolean collapsed) {
+        this.collapsed = collapsed;
+    }
+
+    public void toggleCollapsed() {
+        this.collapsed = !this.collapsed;
+    }
+
+    public boolean isToggleIconClicked(int mouseX, int mouseY) {
+        int iconX = x + width - 20;
+        int iconY = y;
+        int iconSize = 10;
+        return mouseX >= iconX && mouseX <= iconX + iconSize
+                && mouseY >= iconY && mouseY <= iconY + iconSize;
     }
 }
