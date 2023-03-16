@@ -139,4 +139,14 @@ public class MappingElement {
     public void setMapped(boolean isMapped) {
         this.isMapped = isMapped;
     }
+
+    public boolean withinWarningIconBounds(int mouseX, int mouseY) {
+        int imageX = x + width + 5;
+        int imageY = y + 2;
+        int imageWidth = notMappedIcon.getWidth(null);
+        int imageHeight = notMappedIcon.getHeight(null);
+
+        return mouseX >= imageX && mouseX <= imageX + imageWidth
+                && mouseY >= imageY && mouseY <= imageY + imageHeight;
+    }
 }

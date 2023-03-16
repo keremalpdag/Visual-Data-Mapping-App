@@ -16,6 +16,7 @@ public class MappingScreen extends JPanel {
     private MappingElement selectedElement;
     private Point mousePoint;
     private Map<MappingElement, MappingElement> mapping;
+    private static final int MARGIN = 40;
 
     public MappingScreen(XmlFile leftXmlFile, XmlFile rightXmlFile) {
         this.leftXmlFile = leftXmlFile;
@@ -96,6 +97,14 @@ public class MappingScreen extends JPanel {
                 repaint();
 
                 autoScroll(e);
+
+                MappingElement warningIconElement = findWarningIcon(e.getX(), e.getY());
+                if (warningIconElement != null) {
+                    setToolTipText("Element not used");
+                } else {
+                    setToolTipText(null);
+                }
+
             }
 
             @Override
@@ -182,9 +191,9 @@ public class MappingScreen extends JPanel {
 
 
     public void init() {
-        int leftX = 10;
+        int leftX = 10 + MARGIN;
         int leftY = 10;
-        int rightX = 500;
+        int rightX = 500 - MARGIN;
         int rightY = 10;
 
         leftY = generateMappingElements(leftXmlFile.getElements(), leftMappingElements, leftX, leftY, 0);
@@ -201,8 +210,8 @@ public class MappingScreen extends JPanel {
             @Override
             public void componentResized(ComponentEvent e) {
                 int frameWidth = frame.getContentPane().getWidth();
-                int leftX = 10;
-                int rightX = frameWidth - 210;
+                int leftX = 10 + MARGIN;
+                int rightX = frameWidth - 210 - MARGIN;
                 updateMappingElementPositions(leftMappingElements, leftX);
                 updateMappingElementPositions(rightMappingElements, rightX);
                 repaint();
@@ -355,6 +364,20 @@ public class MappingScreen extends JPanel {
     private MappingElement findMappingElementByXmlElement(List<MappingElement> mappingElements, XmlElement xmlElement) {
         for (MappingElement mappingElement : mappingElements) {
             if (mappingElement.getXmlElement() == xmlElement) {
+                return mappingElement;
+            }
+        }
+        return null;
+    }
+
+    private MappingElement findWarningIcon(int x, int y) {
+        for (MappingElement mappingElement : leftMappingElements) {
+            if (!mappingElement.isMapped() && mappingElement.withinWarningIconBounds(x, y)) {
+                return mappingElement;
+            }
+        }
+        for (MappingElement mappingElement : rightMappingElements) {
+            if (!mappingElement.isMapped() && mappingElement.withinWarningIconBounds(x, y)) {
                 return mappingElement;
             }
         }
