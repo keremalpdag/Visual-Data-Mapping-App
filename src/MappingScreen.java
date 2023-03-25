@@ -16,6 +16,8 @@ public class MappingScreen extends JPanel {
     private MappingElement selectedElement;
     private Point mousePoint;
     private Map<MappingElement, MappingElement> mapping;
+    private boolean showDeleteButton = false;
+    private Rectangle deleteButton = new Rectangle(0, 0, 65, 25);
     private static final int MARGIN = 40;
 
     public MappingScreen(XmlFile leftXmlFile, XmlFile rightXmlFile) {
@@ -31,6 +33,32 @@ public class MappingScreen extends JPanel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if (showDeleteButton && deleteButton.contains(e.getPoint())) {
+                    mappingLines.removeIf(line -> line.isNear(deleteButton.x, deleteButton.y));
+                    showDeleteButton = false;
+                    repaint();
+                    return;
+                }
+
+                boolean lineClicked = false;
+
+                for (MappingLine line : mappingLines) {
+                    if (line.isNear(e.getX(), e.getY())) {
+                        showDeleteButton = true;
+                        deleteButton.setLocation(e.getX(), e.getY());
+                        lineClicked = true;
+                        repaint();
+                        break;
+                    }
+                }
+
+                if (!lineClicked) {
+                    showDeleteButton = false;
+                } else {
+                    // If a line is clicked, return immediately to avoid selecting elements.
+                    return;
+                }
+
                 for (MappingElement mappingElement : leftMappingElements) {
                     if (mappingElement.isToggleIconClicked(e.getX(), e.getY())) {
                         mappingElement.toggleCollapsed();
@@ -56,6 +84,8 @@ public class MappingScreen extends JPanel {
                 if (selectedElement != null) {
                     mousePoint = e.getPoint();
                 }
+
+                repaint();
             }
 
             @Override
@@ -94,6 +124,20 @@ public class MappingScreen extends JPanel {
                     }
                 }
 
+                boolean lineNearCursor = false;
+                for (MappingLine line : mappingLines) {
+                    if (line.isNear(e.getX(), e.getY())) {
+                        lineNearCursor = true;
+                        break;
+                    }
+                }
+
+                if (lineNearCursor || isCursorOverDeleteButton(e.getX(), e.getY())) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                } else {
+                    setCursor(Cursor.getDefaultCursor());
+                }
+
                 repaint();
 
                 autoScroll(e);
@@ -112,6 +156,13 @@ public class MappingScreen extends JPanel {
                 autoScroll(e);
             }
         });
+    }
+
+    private boolean isCursorOverDeleteButton(int x, int y) {
+        if (showDeleteButton) {
+            return deleteButton.contains(x, y);
+        }
+        return false;
     }
 
     private void autoScroll(MouseEvent e) {
@@ -339,6 +390,12 @@ public class MappingScreen extends JPanel {
             g.drawLine(selectedElement.getX() + selectedElement.getWidth(),
                     selectedElement.getY() + selectedElement.getHeight() / 2,
                     mousePoint.x, mousePoint.y);
+        }
+        if (showDeleteButton) {
+            g.setColor(Color.BLACK);
+            g.fillRect(deleteButton.x, deleteButton.y, deleteButton.width, deleteButton.height);
+            g.setColor(Color.WHITE);
+            g.drawString("Delete", deleteButton.x + 10, deleteButton.y + 15);
         }
     }
 
