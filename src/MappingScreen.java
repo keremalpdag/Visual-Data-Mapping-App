@@ -40,6 +40,7 @@ public class MappingScreen extends JPanel {
                             line.getDestination().setMapped(false);
                             // Remove the line from the list
                             iterator.remove();
+                            deleteMappedElementValue(line.getDestination());
                         }
                     }
                     showDeleteButton = false;
@@ -451,6 +452,12 @@ public class MappingScreen extends JPanel {
     private void updateElementValue(MappingElement leftElement, MappingElement rightElement){
         rightElement.getXmlElement().setValue(leftElement.getXmlElement().getValue());
         rightElement.getXmlElement().setAttributes(leftElement.getXmlElement().getAttributes());
+    }
+
+    private  void deleteMappedElementValue(MappingElement rightElement){
+        List<XmlAttribute> emptyList = new ArrayList<>();
+        rightElement.getXmlElement().setValue("");
+        rightElement.getXmlElement().setAttributes(emptyList);
     }
 
     private void addMapping(MappingElement leftElement, MappingElement rightElement) {
