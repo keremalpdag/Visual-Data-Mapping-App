@@ -1,10 +1,8 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import javax.swing.*;
 
 public class MappingScreen extends JPanel {
@@ -34,7 +32,16 @@ public class MappingScreen extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (showDeleteButton && deleteButton.contains(e.getPoint())) {
-                    mappingLines.removeIf(line -> line.isNear(deleteButton.x, deleteButton.y));
+                    for (Iterator<MappingLine> iterator = mappingLines.iterator(); iterator.hasNext(); ) {
+                        MappingLine line = iterator.next();
+                        if (line.isNear(deleteButton.x, deleteButton.y)) {
+                            // Update the isMapped variable of the source and destination elements
+                            line.getSource().setMapped(false);
+                            line.getDestination().setMapped(false);
+                            // Remove the line from the list
+                            iterator.remove();
+                        }
+                    }
                     showDeleteButton = false;
                     repaint();
                     return;
