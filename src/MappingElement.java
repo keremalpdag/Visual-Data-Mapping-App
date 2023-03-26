@@ -40,10 +40,10 @@ public class MappingElement {
         g.drawString(xmlElement.getName(), x + 10, y + 20);
 
         if (xmlElement.getChildren() != null && !xmlElement.getChildren().isEmpty()) {
-            g.drawRect(x + width - 20, y, 10, 10);
-            g.drawLine(x + width - 18, y + 5, x + width - 12, y + 5);
+            g.drawRect(x + width - 25, y + 3, 15, 15);
+            g.drawLine(x + width - 22, y + 10, x + width - 13, y + 10);
             if (collapsed) {
-                g.drawLine(x + width - 15, y + 2, x + width - 15, y + 8);
+                g.drawLine(x + width - 17, y + 6, x + width - 17, y + 14);
             }
         }
 
@@ -125,9 +125,9 @@ public class MappingElement {
     }
 
     public boolean isToggleIconClicked(int mouseX, int mouseY) {
-        int iconX = x + width - 20;
+        int iconX = x + width - 25;
         int iconY = y;
-        int iconSize = 10;
+        int iconSize = 15;
         return mouseX >= iconX && mouseX <= iconX + iconSize
                 && mouseY >= iconY && mouseY <= iconY + iconSize;
     }

@@ -17,6 +17,7 @@ public class MappingScreen extends JPanel {
     private boolean showDeleteButton = false;
     private Rectangle deleteButton = new Rectangle(0, 0, 65, 25);
     private static final int MARGIN = 40;
+    private boolean autoMappingEnabled;
 
     public MappingScreen(XmlFile leftXmlFile, XmlFile rightXmlFile) {
         this.leftXmlFile = leftXmlFile;
@@ -27,6 +28,7 @@ public class MappingScreen extends JPanel {
         this.selectedElement = null;
         this.mousePoint = new Point();
         this.mapping = new HashMap<>();
+        this.autoMappingEnabled = true;
 
         this.addMouseListener(new MouseAdapter() {
             @Override
@@ -364,7 +366,49 @@ public class MappingScreen extends JPanel {
         previewFileButton.setFocusable(false);
         previewFileButton.setBorderPainted(false);
 
+        JButton turnOfAutoMapping = new JButton("Toggle Auto-Mapping");
+        turnOfAutoMapping.addActionListener(e -> {
+            this.setAutoMappingEnabled(!this.isAutoMappingEnabled());
+            JOptionPane.showMessageDialog(null, "Auto mapping is now " + (this.isAutoMappingEnabled() ? "enabled" : "disabled") + ".");
+        });
+        turnOfAutoMapping.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                JButton button = (JButton) e.getSource();
+                button.setBackground(UIManager.getColor("control"));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                JButton button = (JButton) e.getSource();
+                button.setBackground(Color.LIGHT_GRAY);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                JButton button = (JButton) e.getSource();
+                button.setBackground(UIManager.getColor("control"));
+            }
+        });
+        turnOfAutoMapping.setBackground(Color.white);
+        turnOfAutoMapping.setForeground(new Color(2, 83, 255));
+        turnOfAutoMapping.setFont(new Font("Arial", Font.BOLD, 16));
+        turnOfAutoMapping.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        turnOfAutoMapping.setFocusable(false);
+        turnOfAutoMapping.setBorderPainted(false);
+
         JPanel buttonPanel = new JPanel();
+        buttonPanel.add(turnOfAutoMapping);
         buttonPanel.add(previewFileButton);
         buttonPanel.add(saveButton);
 
@@ -452,6 +496,10 @@ public class MappingScreen extends JPanel {
     private void updateElementValue(MappingElement leftElement, MappingElement rightElement){
         rightElement.getXmlElement().setValue(leftElement.getXmlElement().getValue());
         rightElement.getXmlElement().setAttributes(leftElement.getXmlElement().getAttributes());
+
+        if (autoMappingEnabled) {
+            autoMapChildren(leftElement, rightElement);
+        }
     }
 
     private  void deleteMappedElementValue(MappingElement rightElement){
@@ -467,8 +515,62 @@ public class MappingScreen extends JPanel {
         leftElement.setMapped(true);
         rightElement.setMapped(true);
         repaint();
+
+        if (autoMappingEnabled) {
+            autoMapChildren(leftElement, rightElement);
+        }
     }
     public Map<MappingElement, MappingElement> getMapping() {
         return mapping;
+    }
+
+    private void autoMapChildren(MappingElement leftParent, MappingElement rightParent) {
+        if (leftParent.getXmlElement().getChildren() == null || rightParent.getXmlElement().getChildren() == null) {
+            return;
+        }
+
+        Map<String, XmlElement> leftChildren = new HashMap<>();
+        Map<String, XmlElement> rightChildren = new HashMap<>();
+
+        for (XmlElement leftChild : leftParent.getXmlElement().getChildren()) {
+            if (!leftChildren.containsKey(leftChild.getName())) {
+                leftChildren.put(leftChild.getName(), leftChild);
+            }
+        }
+
+        for (XmlElement rightChild : rightParent.getXmlElement().getChildren()) {
+            if (!rightChildren.containsKey(rightChild.getName())) {
+                rightChildren.put(rightChild.getName(), rightChild);
+            }
+        }
+
+        for (Map.Entry<String, XmlElement> leftChildEntry : leftChildren.entrySet()) {
+            XmlElement rightChild = rightChildren.get(leftChildEntry.getKey());
+            if (rightChild != null) {
+                MappingElement leftChildElement = findMappingElement(leftMappingElements, leftChildEntry.getValue());
+                MappingElement rightChildElement = findMappingElement(rightMappingElements, rightChild);
+                if (leftChildElement != null && rightChildElement != null) {
+                    updateElementValue(leftChildElement, rightChildElement);
+                    addMapping(leftChildElement, rightChildElement);
+                }
+            }
+        }
+    }
+
+    private MappingElement findMappingElement(List<MappingElement> mappingElements, XmlElement xmlElement) {
+        for (MappingElement mappingElement : mappingElements) {
+            if (mappingElement.getXmlElement() == xmlElement) {
+                return mappingElement;
+            }
+        }
+        return null;
+    }
+
+    public boolean isAutoMappingEnabled() {
+        return autoMappingEnabled;
+    }
+
+    public void setAutoMappingEnabled(boolean autoMappingEnabled) {
+        this.autoMappingEnabled = autoMappingEnabled;
     }
 }
