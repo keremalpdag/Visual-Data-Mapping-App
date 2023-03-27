@@ -118,9 +118,13 @@ public class MappingScreen extends JPanel {
         this.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
+                boolean isCursorOverElement = false;
+
                 for (MappingElement mappingElement : leftMappingElements) {
                     if (mappingElement.withinBounds(e.getX(), e.getY())) {
+                        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                         mappingElement.setColor(new Color(72, 168, 197));
+                        isCursorOverElement = true;
                     } else {
                         mappingElement.setColor(Color.BLUE);
                     }
@@ -128,7 +132,9 @@ public class MappingScreen extends JPanel {
 
                 for (MappingElement mappingElement : rightMappingElements) {
                     if (mappingElement.withinBounds(e.getX(), e.getY())) {
+                        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                         mappingElement.setColor(new Color(72, 168, 197));
+                        isCursorOverElement = true;
                     } else {
                         mappingElement.setColor(Color.BLUE);
                     }
@@ -144,7 +150,7 @@ public class MappingScreen extends JPanel {
 
                 if (lineNearCursor || isCursorOverDeleteButton(e.getX(), e.getY())) {
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                } else {
+                } else if(!isCursorOverElement) {
                     setCursor(Cursor.getDefaultCursor());
                 }
 
@@ -152,13 +158,8 @@ public class MappingScreen extends JPanel {
 
                 autoScroll(e);
 
-                MappingElement warningIconElement = findWarningIcon(e.getX(), e.getY());
-                if (warningIconElement != null) {
-                    setToolTipText("Element not used");
-                } else {
-                    setToolTipText(null);
-                }
-
+                updateWarningToolTipText(e);
+                updateElementToolTipText(e);
             }
 
             @Override
@@ -572,5 +573,54 @@ public class MappingScreen extends JPanel {
 
     public void setAutoMappingEnabled(boolean autoMappingEnabled) {
         this.autoMappingEnabled = autoMappingEnabled;
+    }
+
+    private void updateWarningToolTipText(MouseEvent e) {
+        MappingElement warningIconElement = findWarningIcon(e.getX(), e.getY());
+        if (warningIconElement != null) {
+            setToolTipText("Element not used");
+        } else {
+            setToolTipText(null);
+        }
+    }
+
+    private void updateElementToolTipText(MouseEvent e){
+        MappingElement hoverElement = null;
+
+        for (MappingElement mappingElement : leftMappingElements) {
+            if (mappingElement.withinBounds(e.getX(), e.getY())) {
+                hoverElement = mappingElement;
+                break;
+            }
+        }
+
+        if (hoverElement == null) {
+            for (MappingElement mappingElement : rightMappingElements) {
+                if (mappingElement.withinBounds(e.getX(), e.getY())) {
+                    hoverElement = mappingElement;
+                    break;
+                }
+            }
+        }
+
+        if (hoverElement != null) {
+            XmlElement xmlElement = hoverElement.getXmlElement();
+            if (xmlElement.getChildren() != null && !xmlElement.getChildren().isEmpty()) {
+                if (xmlElement.getParent() == null) {
+                    setToolTipText("Root element");
+                } else {
+                    setToolTipText("Parent element with children");
+                }
+            } else {
+                String value = xmlElement.getValue();
+                if (value != null && !value.isEmpty()) {
+                    setToolTipText("Value: " + "'" + value + "'");
+                } else {
+                    setToolTipText(null);
+                }
+            }
+        } else {
+            setToolTipText(null);
+        }
     }
 }
