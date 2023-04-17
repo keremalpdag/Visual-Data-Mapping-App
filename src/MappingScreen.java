@@ -16,8 +16,9 @@ public class MappingScreen extends JPanel {
     private Map<MappingElement, MappingElement> mapping;
     private boolean showDeleteButton = false;
     private Rectangle deleteButton = new Rectangle(0, 0, 65, 25);
-    private static final int MARGIN = 40;
+    private static final int MARGIN = 50;
     private boolean autoMappingEnabled;
+    private int maxIndentLevel = 5;
 
     public MappingScreen(XmlFile leftXmlFile, XmlFile rightXmlFile) {
         this.leftXmlFile = leftXmlFile;
@@ -213,18 +214,36 @@ public class MappingScreen extends JPanel {
         }
     }
 
-
     private int generateMappingElements(List<XmlElement> xmlElements, List<MappingElement> mappingElements, int x, int y, int indentLevel) {
-        int elementWidth = 200 - indentLevel * 20;
+        int elementWidth;
+
+        if (indentLevel == 0) {
+            elementWidth = 210; // Set a larger width for the root element
+        } else if (indentLevel == 1) {
+            elementWidth = 200 - indentLevel * 10; // Set a smaller indentation size for the first level
+        } else {
+            elementWidth = 200 - indentLevel * 15; // Reduce the indentation size to make the elements bigger for the other levels
+        }
+
         for (XmlElement element : xmlElements) {
-            MappingElement mappingElement = new MappingElement(element, x + indentLevel * 20, y, elementWidth, 30, this.getWidth());
+            int xOffset = (indentLevel == 1) ? 10 : indentLevel * 15; // Apply the smaller indentation size for the first level
+            MappingElement mappingElement = new MappingElement(element, x + xOffset, y, elementWidth, 30, this.getWidth(), indentLevel);
             mappingElements.add(mappingElement);
             y += 35;
+
             if (element.getChildren() != null) {
-                y = generateMappingElements(element.getChildren(), mappingElements, x, y, indentLevel + 1);
+                // Do not increase the indentation level if it has reached the maximum
+                int nextIndentLevel = indentLevel < maxIndentLevel ? indentLevel + 1 : indentLevel;
+                y = generateMappingElements(element.getChildren(), mappingElements, x, y, nextIndentLevel);
             }
         }
         return y;
+    }
+
+    private void drawArrow(Graphics g, int x, int y) {
+        int[] xPoints = new int[] {x, x + 5, x};
+        int[] yPoints = new int[] {y, y + 5, y + 10};
+        g.fillPolygon(xPoints, yPoints, 3);
     }
 
     private void updateMappingElementPositions(List<MappingElement> mappingElements, int newX) {
@@ -250,7 +269,6 @@ public class MappingScreen extends JPanel {
         }
         return null;
     }
-
 
     public void init() {
         int leftX = 10 + MARGIN;
@@ -279,7 +297,6 @@ public class MappingScreen extends JPanel {
                 repaint();
             }
         });
-
 
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener(e -> {
@@ -449,6 +466,22 @@ public class MappingScreen extends JPanel {
             g.fillRect(deleteButton.x, deleteButton.y, deleteButton.width, deleteButton.height);
             g.setColor(Color.WHITE);
             g.drawString("Delete", deleteButton.x + 10, deleteButton.y + 15);
+        }
+
+        g.setColor(Color.BLACK);
+
+        // Add the arrow drawing for leftMappingElements
+        for (MappingElement mappingElement : leftMappingElements) {
+            if (mappingElement.getIndentLevel() == maxIndentLevel && mappingElement.getXmlElement().hasChildren()) {
+                drawArrow(g, mappingElement.getX() - 10, mappingElement.getY() + 10);
+            }
+        }
+
+        // Add the arrow drawing for rightMappingElements
+        for (MappingElement mappingElement : rightMappingElements) {
+            if (mappingElement.getIndentLevel() == maxIndentLevel && mappingElement.getXmlElement().hasChildren()) {
+                drawArrow(g, mappingElement.getX() - 10, mappingElement.getY() + 10);
+            }
         }
     }
 

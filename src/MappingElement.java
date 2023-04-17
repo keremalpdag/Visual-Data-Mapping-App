@@ -14,8 +14,9 @@ public class MappingElement {
     private boolean collapsed;
     private boolean isMapped;
     private Image notMappedIcon;
+    private int indentLevel;
 
-    public MappingElement(XmlElement xmlElement, int x, int y, int width, int height, int panelWidth) {
+    public MappingElement(XmlElement xmlElement, int x, int y, int width, int height, int panelWidth, int indentLevel) {
         this.xmlElement = xmlElement;
         this.x = x;
         this.y = y;
@@ -25,6 +26,7 @@ public class MappingElement {
         this.color = Color.BLUE;
         this.collapsed = false;
         this.isMapped = false;
+        this.indentLevel = indentLevel;
 
         try {
             notMappedIcon = ImageIO.read(new File("warning_icon.png")).getScaledInstance(18, 18, Image.SCALE_SMOOTH);
@@ -148,5 +150,9 @@ public class MappingElement {
 
         return mouseX >= imageX && mouseX <= imageX + imageWidth
                 && mouseY >= imageY && mouseY <= imageY + imageHeight;
+    }
+
+    public int getIndentLevel() {
+        return indentLevel;
     }
 }

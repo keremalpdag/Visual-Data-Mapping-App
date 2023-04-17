@@ -93,4 +93,8 @@ public class XmlElement {
         this.children = children;
     }
 
+    public boolean hasChildren() {
+        return !children.isEmpty();
+    }
+
 }

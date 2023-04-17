@@ -1,5 +1,4 @@
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 
 public class MappingLine {
     private MappingElement source;
@@ -12,8 +11,10 @@ public class MappingLine {
 
     public void draw(Graphics g) {
         g.setColor(Color.RED);
+        ((Graphics2D) g).setStroke(new BasicStroke(2.5f)); // Set the stroke thickness to 3
         g.drawLine(source.getX() + source.getWidth(), source.getY() + source.getHeight() / 2,
                 destination.getX(), destination.getY() + destination.getHeight() / 2);
+        ((Graphics2D) g).setStroke(new BasicStroke(1)); // Reset the stroke thickness to the default value (1)
     }
 
     public MappingElement getSource() {
