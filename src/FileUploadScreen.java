@@ -125,11 +125,10 @@ public class FileUploadScreen extends JFrame {
                 JOptionPane.showMessageDialog(panel1, "You didn't select a file.", "Error Message", JOptionPane.INFORMATION_MESSAGE);
             }
         });
-        aboutButton.addActionListener(e -> JOptionPane.showMessageDialog(panel1, """
-                This is the about section.
-                info info info
-                more info info info
-                deneme""", "About the Project", JOptionPane.INFORMATION_MESSAGE));
+        aboutButton.addActionListener(e -> {
+            AboutScreen aboutScreen = new AboutScreen();
+            aboutScreen.setVisible(true);
+        });
     }
 
     public void buttonBuilder(JButton button) {
