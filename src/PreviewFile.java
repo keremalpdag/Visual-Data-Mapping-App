@@ -18,19 +18,29 @@ public class PreviewFile {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setPreferredSize(new Dimension(800, 600));
 
+        // Create a JLabel to display the file name
+        JLabel fileNameLabel = new JLabel("File: " + xmlFile.getFileName(), SwingConstants.CENTER);
+        fileNameLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        fileNameLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
         // Create a JTextArea to display the preview text
         JTextArea previewTextArea = new JTextArea();
         previewTextArea.setEditable(false);
-        previewTextArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
+        previewTextArea.setFont(new Font("Arial", Font.PLAIN, 14));
+        previewTextArea.setBackground(new Color(240, 240, 240));
+        previewTextArea.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
         // Create a JScrollPane to wrap the preview text area
         JScrollPane scrollPane = new JScrollPane(previewTextArea);
         scrollPane.setPreferredSize(new Dimension(600, 400));
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Create a JPanel to hold the preview text area and scroll pane
         JPanel previewPanel = new JPanel(new BorderLayout());
         previewPanel.add(scrollPane, BorderLayout.CENTER);
+        previewPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Create a JButton to close the preview window
         JButton closeButton = new JButton("Close Preview");
@@ -74,9 +84,10 @@ public class PreviewFile {
         // Create a JPanel to hold the close button
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(closeButton);
-        buttonPanel.setBackground(new Color(2,83,255));
+        buttonPanel.setBackground(new Color(2, 83, 255));
 
         // Add the panels to the frame
+        frame.getContentPane().add(fileNameLabel, BorderLayout.NORTH);
         frame.getContentPane().add(previewPanel, BorderLayout.CENTER);
         frame.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
@@ -86,9 +97,13 @@ public class PreviewFile {
         // Set the preview text in the text area
         previewTextArea.setText(previewText);
 
+        // Set the caret position to the beginning of the text area
+        previewTextArea.setCaretPosition(0);
+
         // Pack the frame and display it
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }
+
