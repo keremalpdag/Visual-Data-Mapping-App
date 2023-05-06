@@ -284,7 +284,18 @@ public class MappingScreen extends JPanel {
         setPreferredSize(preferredSize);
 
         JFrame frame = new JFrame("Mapping Screen");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int result = JOptionPane.showConfirmDialog(frame, "Are you sure you want to exit the mapping? All data will be lost.", "Exit Mapping", JOptionPane.OK_CANCEL_OPTION);
+
+                if (result == JOptionPane.OK_OPTION) {
+                    frame.dispose();
+                }
+            }
+        });
 
         frame.addComponentListener(new ComponentAdapter() {
             @Override
@@ -558,6 +569,10 @@ public class MappingScreen extends JPanel {
         return mapping;
     }
 
+    private String normalizeElementName(String elementName) {
+        return elementName.toLowerCase().replaceAll("[^a-z0-9]", "");
+    }
+
     private void autoMapChildren(MappingElement leftParent, MappingElement rightParent) {
         if (leftParent.getXmlElement().getChildren() == null || rightParent.getXmlElement().getChildren() == null) {
             return;
@@ -567,14 +582,16 @@ public class MappingScreen extends JPanel {
         Map<String, XmlElement> rightChildren = new HashMap<>();
 
         for (XmlElement leftChild : leftParent.getXmlElement().getChildren()) {
-            if (!leftChildren.containsKey(leftChild.getName())) {
-                leftChildren.put(leftChild.getName(), leftChild);
+            String normalizedLeftChildName = normalizeElementName(leftChild.getName());
+            if (!leftChildren.containsKey(normalizedLeftChildName)) {
+                leftChildren.put(normalizedLeftChildName, leftChild);
             }
         }
 
         for (XmlElement rightChild : rightParent.getXmlElement().getChildren()) {
-            if (!rightChildren.containsKey(rightChild.getName())) {
-                rightChildren.put(rightChild.getName(), rightChild);
+            String normalizedRightChildName = normalizeElementName(rightChild.getName());
+            if (!rightChildren.containsKey(normalizedRightChildName)) {
+                rightChildren.put(normalizedRightChildName, rightChild);
             }
         }
 
