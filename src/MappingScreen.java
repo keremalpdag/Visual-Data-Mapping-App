@@ -104,7 +104,6 @@ public class MappingScreen extends JPanel {
                 if (selectedElement != null) {
                     for (MappingElement mappingElement : rightMappingElements) {
                         if (mappingElement.withinBounds(e.getX(), e.getY())) {
-                            updateElementValue(selectedElement, mappingElement);
                             addMapping(selectedElement, mappingElement);
                             break;
                         }
@@ -554,6 +553,13 @@ public class MappingScreen extends JPanel {
     }
 
     private void addMapping(MappingElement leftElement, MappingElement rightElement) {
+        if(!autoMappingEnabled && rightElement.isMapped()){
+            JOptionPane.showMessageDialog(null, "Element " + "'" + rightElement.getXmlElement().getName() + "'" +
+                    " is already mapped. Delete the previous mapping to map it to a new element.", "Mapping Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        updateElementValue(leftElement, rightElement);
         mapping.put(leftElement, rightElement);
         MappingLine mappingLine = new MappingLine(leftElement, rightElement);
         mappingLines.add(mappingLine);
@@ -565,6 +571,7 @@ public class MappingScreen extends JPanel {
             autoMapChildren(leftElement, rightElement);
         }
     }
+
     public Map<MappingElement, MappingElement> getMapping() {
         return mapping;
     }
