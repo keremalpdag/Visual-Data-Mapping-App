@@ -139,13 +139,13 @@ public class XmlFile {
         String mappedFileName = fileName.substring(0, extIndex) + "_mapped" + fileName.substring(extIndex);
         FileWriter writer = new FileWriter(file.getAbsolutePath().substring(0,file.getAbsolutePath().lastIndexOf(File.separator)) + File.separator + mappedFileName);
         writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        writer.write("<" + elements.get(0).getName() + ">\n");
+        //writer.write("<" + elements.get(0).getName() + ">\n");
 
         for (XmlElement element : elements) {
             writeElement(writer, element, 1);
         }
 
-        writer.write("</" + elements.get(0).getName() + ">\n");
+        //writer.write("</" + elements.get(0).getName() + ">\n");
         writer.close();
     }
 

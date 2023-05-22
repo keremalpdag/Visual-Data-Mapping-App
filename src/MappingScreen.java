@@ -19,6 +19,7 @@ public class MappingScreen extends JPanel {
     private static final int MARGIN = 50;
     private boolean autoMappingEnabled;
     private int maxIndentLevel = 5;
+    private boolean warningUpdated = false;
 
     public MappingScreen(XmlFile leftXmlFile, XmlFile rightXmlFile) {
         this.leftXmlFile = leftXmlFile;
@@ -636,13 +637,19 @@ public class MappingScreen extends JPanel {
         MappingElement warningIconElement = findWarningIcon(e.getX(), e.getY());
         if (warningIconElement != null) {
             setToolTipText("Element not used");
+            warningUpdated = true;
         } else {
             setToolTipText(null);
+            warningUpdated = false;
         }
     }
 
     private void updateElementToolTipText(MouseEvent e){
         MappingElement hoverElement = null;
+
+        if(warningUpdated){
+            return;
+        }
 
         for (MappingElement mappingElement : leftMappingElements) {
             if (mappingElement.withinBounds(e.getX(), e.getY())) {
