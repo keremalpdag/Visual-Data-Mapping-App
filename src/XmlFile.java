@@ -18,6 +18,8 @@ public class XmlFile {
     private String fileName;
     private List<XmlElement> elements;
     private File file;
+    public boolean exceptionThrown;
+    public int exceptionType = -1; //0 = ParserConfigurationException, 1 = SAXException, 2 = IOException
 
     public XmlFile(File file) {
         this.fileName = file.getName();
@@ -33,7 +35,18 @@ public class XmlFile {
             Document document = builder.parse(file);
             Element rootElement = document.getDocumentElement();
             processElement(rootElement, null);
-        } catch (ParserConfigurationException | SAXException | IOException e) {
+            exceptionThrown = false;
+        } catch (ParserConfigurationException e) {
+            exceptionThrown = true;
+            exceptionType = 0;
+            e.printStackTrace();
+        } catch (SAXException e) {
+            exceptionThrown = true;
+            exceptionType = 1;
+            e.printStackTrace();
+        } catch (IOException e) {
+            exceptionThrown = true;
+            exceptionType = 2;
             e.printStackTrace();
         }
     }

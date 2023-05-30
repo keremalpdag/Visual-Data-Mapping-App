@@ -97,8 +97,28 @@ public class FileUploadScreen extends JFrame {
                 System.out.println("deneme1");
                 XmlFile xmlFile1 = new XmlFile(file1);
                 XmlFile xmlFile2 = new XmlFile(file2);
-                MappingScreen mappingScreen = new MappingScreen(xmlFile1,xmlFile2);
-                mappingScreen.init();
+                if(!xmlFile1.exceptionThrown && !xmlFile2.exceptionThrown) {
+                    MappingScreen mappingScreen = new MappingScreen(xmlFile1, xmlFile2);
+                    mappingScreen.init();
+                }
+                else{
+                    if(xmlFile1.exceptionType == 0 || xmlFile2.exceptionType == 0){
+                        String errorMessage = "Failed to configure XML parser.";
+                        JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else if (xmlFile1.exceptionType == 1 || xmlFile2.exceptionType == 1){
+                        String errorMessage = "Invalid XML file format. Please check the files and try again.";
+                        JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else if(xmlFile1.exceptionType == 2 || xmlFile2.exceptionType == 2){
+                        String errorMessage = "Failed to read the XML files. Please ensure the files exists and are accessible.";
+                        JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else{
+                        String errorMessage = "An error occurred while initiating the mapping. Please check your XML files.";
+                        JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             } else {
                 JOptionPane.showMessageDialog(panel1, "Please select files.", "Error Message", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -107,8 +127,28 @@ public class FileUploadScreen extends JFrame {
             if(file1 != null){
                 System.out.println("Preview 1");
                 XmlFile xmlFile = new XmlFile(file1);
-                PreviewFile previewFile = new PreviewFile(xmlFile, 1);
-                previewFile.showPreview();
+                if(!xmlFile.exceptionThrown) {
+                    PreviewFile previewFile = new PreviewFile(xmlFile, 1);
+                    previewFile.showPreview();
+                }
+                else {
+                    if(xmlFile.exceptionType == 0){
+                        String errorMessage = "Failed to configure XML parser.";
+                        JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else if(xmlFile.exceptionType == 1){
+                        String errorMessage = "Invalid XML file format. Please check the file and try again.";
+                        JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else if(xmlFile.exceptionType == 2){
+                        String errorMessage = "Failed to read the XML file. Please ensure the file exists and is accessible.";
+                        JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else{
+                        String errorMessage = "An unknown error occurred while initiating the preview. Please check your XML file.";
+                        JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             }
             else{
                 JOptionPane.showMessageDialog(panel1, "You didn't select a file.", "Error Message", JOptionPane.INFORMATION_MESSAGE);
@@ -118,8 +158,28 @@ public class FileUploadScreen extends JFrame {
             if(file2 != null){
                 System.out.println("Preview 2");
                 XmlFile xmlFile = new XmlFile(file2);
-                PreviewFile previewFile = new PreviewFile(xmlFile, 2);
-                previewFile.showPreview();
+                if(!xmlFile.exceptionThrown) {
+                    PreviewFile previewFile = new PreviewFile(xmlFile, 2);
+                    previewFile.showPreview();
+                }
+                else{
+                    if(xmlFile.exceptionType == 0){
+                        String errorMessage = "Failed to configure XML parser.";
+                        JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else if(xmlFile.exceptionType == 1){
+                        String errorMessage = "Invalid XML file format. Please check the file and try again.";
+                        JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else if(xmlFile.exceptionType == 2){
+                        String errorMessage = "Failed to read the XML file. Please ensure the file exists and is accessible.";
+                        JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else{
+                        String errorMessage = "An unknown error occurred while initiating the preview. Please check your XML file.";
+                        JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             }
             else{
                 JOptionPane.showMessageDialog(panel1, "You didn't select a file.", "Error Message", JOptionPane.INFORMATION_MESSAGE);
