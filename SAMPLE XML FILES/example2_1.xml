@@ -1,0 +1,43 @@
+<cargo>
+  <shipment>
+    <cargoid>12345</cargoid>
+    <date>2023-03-08</date>
+    <from>China</from>
+    <to>United States</to>
+    <carrier>
+      <name>Global Shipping Co.</name>
+      <tracking_number>GS123456789</tracking_number>
+    </carrier>
+    <weight unit="kg">500</weight>
+    <contents>
+      <item>
+        <name>T-shirts</name>
+        <description>100% Cotton, Unisex</description>
+        <quantity>1000</quantity>
+        <weight unit="g">200</weight>
+      </item>
+      <item>
+        <name>Jeans</name>
+        <description>Denim, Slim Fit</description>
+        <quantity>500</quantity>
+        <weight unit="g">400</weight>
+      </item>
+      <item>
+        <name>Sneakers</name>
+        <description>Unisex, Various Sizes</description>
+        <quantity>300</quantity>
+        <weight unit="g">800</weight>
+      </item>
+    </contents>
+    <insurance>
+      <provider>InsureCargo</provider>
+      <policy_number>IC987654321</policy_number>
+      <coverage_amount currency="USD">50000</coverage_amount>
+    </insurance>
+    <customs>
+      <declaration_number>CDN321654987</declaration_number>
+      <exporter>Exporter Company</exporter>
+      <importer>Importer Company</importer>
+    </customs>
+  </shipment>
+</cargo>

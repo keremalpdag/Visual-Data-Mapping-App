@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <employees>
+    <employee>
+      <name>John Doe</name>
+      <department>Sales</department>
+      <empId>1</empId>
+    </employee>
+    <employee>
+      <name>Jane Smith</name>
+      <department>Marketing</department>
+      <empId>2</empId>
+    </employee>
+    <employee>
+      <name>Kerem Alpdag</name>
+      <department>Dev</department>
+      <empId>3</empId>
+    </employee>
+  </employees>

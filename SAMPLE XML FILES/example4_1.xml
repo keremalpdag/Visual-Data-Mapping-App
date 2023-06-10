@@ -1,0 +1,118 @@
+<orders>
+  <order>
+    <id>001</id>
+    <customer>
+      <name>John Doe</name>
+      <email>john@example.com</email>
+    </customer>
+    <items>
+      <item>
+        <id>101</id>
+        <name>Product A</name>
+        <price>19.99</price>
+        <quantity>2</quantity>
+      </item>
+      <item>
+        <id>102</id>
+        <name>Product B</name>
+        <price>14.99</price>
+        <quantity>3</quantity>
+      </item>
+	  <item>
+        <id>102</id>
+        <name>Product B</name>
+        <price>14.99</price>
+        <quantity>3</quantity>
+      </item>
+    </items>
+    <total>99.95</total>
+    <status>Shipped</status>
+  </order>
+  <order>
+    <id>002</id>
+    <customer>
+      <name>Jane Smith</name>
+      <email>jane@example.com</email>
+    </customer>
+    <items>
+      <item>
+        <id>201</id>
+        <name>Product C</name>
+        <price>9.99</price>
+        <quantity>1</quantity>
+      </item>
+      <item>
+        <id>202</id>
+        <name>Product D</name>
+        <price>24.99</price>
+        <quantity>2</quantity>
+      </item>
+      <item>
+        <id>203</id>
+        <name>Product E</name>
+        <price>12.99</price>
+        <quantity>4</quantity>
+      </item>
+    </items>
+    <total>97.92</total>
+    <status>Pending</status>
+  </order>
+    <order>
+    <id>002</id>
+    <customer>
+      <name>Jane Smith</name>
+      <email>jane@example.com</email>
+    </customer>
+    <items>
+      <item>
+        <id>201</id>
+        <name>Product C</name>
+        <price>9.99</price>
+        <quantity>1</quantity>
+      </item>
+      <item>
+        <id>202</id>
+        <name>Product D</name>
+        <price>24.99</price>
+        <quantity>2</quantity>
+      </item>
+      <item>
+        <id>203</id>
+        <name>Product E</name>
+        <price>12.99</price>
+        <quantity>4</quantity>
+      </item>
+    </items>
+    <total>97.92</total>
+    <status>Pending</status>
+  </order>
+    <order>
+    <id>002</id>
+    <customer>
+      <name>Jane Smith</name>
+      <email>jane@example.com</email>
+    </customer>
+    <items>
+      <item>
+        <id>201</id>
+        <name>Product C</name>
+        <price>9.99</price>
+        <quantity>1</quantity>
+      </item>
+      <item>
+        <id>202</id>
+        <name>Product D</name>
+        <price>24.99</price>
+        <quantity>2</quantity>
+      </item>
+      <item>
+        <id>203</id>
+        <name>Product E</name>
+        <price>12.99</price>
+        <quantity>4</quantity>
+      </item>
+    </items>
+    <total>97.92</total>
+    <status>Pending</status>
+  </order>
+</orders>
