@@ -37,7 +37,8 @@ public class AboutScreen extends JFrame {
         aboutTextArea.setLineWrap(true);
         aboutTextArea.setWrapStyleWord(true);
         aboutTextArea.setText("""
-                The Data Mapping Editor is an application that allows users to map XML data from two different files. It provides an intuitive graphical interface to create, edit, and visualize the mapping between the elements of the XML files.""");
+                The Data Mapping Editor is an application that allows users to map XML data from two different files. 
+                It provides an intuitive graphical interface to create, edit, and visualize the mapping between the elements of the XML files.""");
 
         JScrollPane scrollPane = new JScrollPane(aboutTextArea);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -57,8 +58,7 @@ public class AboutScreen extends JFrame {
                 4. In the mapping editor, click and drag from an element in one file to an element in the other file to create a mapping line.
                 5. To delete a mapping line, click on it and press the 'Delete' key on your keyboard.
                 6. You can navigate the tree structure of the XML files by following the indentations or the arrow icons next to the elements.
-                7. To save your mapping, click the 'Save' button in the mapping editor.
-                8. To load a previously saved mapping, click the 'Load' button in the mapping editor.""");
+                7. To save your mapping, click the 'Save' button in the mapping editor.""");
 
         JScrollPane scrollPane = new JScrollPane(howToUseTextArea);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
